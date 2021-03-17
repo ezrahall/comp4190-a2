@@ -163,7 +163,8 @@ class Factor(object):
             for factor in factorList:
                 if e in factor.variables:
                     factorObserve = Factor.observe(factor, e, evidenceList[e])
-
+                    print 'Observe',
+                    print e
                     newFactorList.append(factorObserve)
                 else:
                     newFactorList.append(factor)
@@ -180,31 +181,93 @@ class Factor(object):
                     factorListNormalized.append(factor)
 
             factorProduct = reduce(Factor.multiply, factorListMultiplied)
-
+            print 'Multiply:',
+            print i
+            factorProduct.printTable()
             factorSumout = Factor.sumout(factorProduct, i)
-
+            print 'Sumout: ',
+            print i
+            factorSumout.printTable()
             factorList = factorListNormalized
             factorList.append(factorSumout)
 
         factorProduct = reduce(Factor.multiply, factorList)
-
+        print 'Multiply:',
+        factorProduct.printTable()
         result = Factor.normalize(factorProduct)
+        print 'Normalize'
         return result
 
 
 def main():
-    f1 = Factor(['A'], [0.1, 0.9])
+    # f1 = Factor(['A'], [0.1, 0.9])
+    #
+    # f2 = Factor(['A', 'B'], [0.8, 0.2, 0.1, 0.9])
+    #
+    # f3 = Factor(['B', 'C'], [0.3, 0.7, 0.1, 0.9])
+    #
+    # fL = [f1, f2, f3]
+    # hL = ['A', 'B']
+    # ql = ['C']
+    # eL = dict()
+    # fRes = Factor.inference(fL, ql, hL, eL)
+    # fRes.printTable()
 
-    f2 = Factor(['A', 'B'], [0.8, 0.2, 0.1, 0.9])
+    f1 = Factor(['Trav'], \
+                [0.05, 0.95])
 
-    f3 = Factor(['B', 'C'], [0.3, 0.7, 0.1, 0.9])
+    f2 = Factor(['Fraud', 'Trav'], \
+                [0.01, 0.004, 0.99, 0.996])
 
-    fL = [f1, f2, f3]
-    hL = ['A', 'B']
-    ql = ['C']
-    eL = dict()
-    fRes = Factor.inference(fL, ql, hL, eL)
+    f3 = Factor(['FP', 'Fraud', 'Trav'], \
+                [0.9, 0.1, 0.9, 0.01, 0.1, 0.9, 0.1, 0.99])
+
+    f4 = Factor(['IP', 'Fraud', 'OC'], \
+                [0.15, 0.051, 0.1, 0.001, 0.85, 0.949, 0.9, 0.999])
+
+    f5 = Factor(['CRP', 'OC'], \
+                [0.1, 0.01, 0.9, 0.99])
+
+    f6 = Factor(['OC'], \
+                [0.8, 0.2])
+
+    fL = [f1, f2, f3, f4, f5, f6]
+    qL = ['Fraud']
+    hL = ['Trav', 'OC']
+    eL = dict(FP=True, IP=False, CRP=True)
+    fRes = Factor.inference(fL, qL, hL, eL)
     fRes.printTable()
+
+# Observe FP
+# Observe IP
+# Observe CRP
+# Multiply: Trav
+# ['Fraud', 'Trav']
+# True , True , :  0.00045
+# True , False , :  0.00038
+# False , True , :  0.04455
+# False , False , :  0.009462
+# Sumout:  Trav
+# ['Fraud']
+# True , :  0.00083
+# False , :  0.054012
+# Multiply: OC
+# ['Fraud', 'OC']
+# True , True , :  0.068
+# True , False , :  0.001898
+# False , True , :  0.072
+# False , False , :  0.001998
+# Sumout:  OC
+# ['Fraud']
+# True , :  0.069898
+# False , :  0.073998
+# Multiply: ['Fraud']
+# True , :  5.801534e-05
+# False , :  0.003996779976
+# Normalize
+# ['Fraud']
+# True , :  0.0143078344229
+# False , :  0.985692165577
 
 
 main()
