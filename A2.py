@@ -165,6 +165,7 @@ class Factor(object):
                     factorObserve = Factor.observe(factor, e, evidenceList[e])
                     print 'Observe',
                     print e
+                    factorObserve.printTable()
                     newFactorList.append(factorObserve)
                 else:
                     newFactorList.append(factor)
@@ -223,7 +224,7 @@ def main():
                 [0.9, 0.1, 0.9, 0.01, 0.1, 0.9, 0.1, 0.99])
 
     f4 = Factor(['IP', 'Fraud', 'OC'], \
-                [0.15, 0.051, 0.1, 0.001, 0.85, 0.949, 0.9, 0.999])
+                [0.02, 0.0011, 0.01, 0.001, 0.98, 0.989, 0.99, 0.999])
 
     f5 = Factor(['CRP', 'OC'], \
                 [0.1, 0.01, 0.9, 0.99])
@@ -239,8 +240,21 @@ def main():
     fRes.printTable()
 
 # Observe FP
+# ['Fraud', 'Trav']
+# True , True , :  0.9
+# True , False , :  0.1
+# False , True , :  0.9
+# False , False , :  0.01
 # Observe IP
+# ['Fraud', 'OC']
+# True , True , :  0.98
+# True , False , :  0.989
+# False , True , :  0.99
+# False , False , :  0.999
 # Observe CRP
+# ['OC']
+# True , :  0.1
+# False , :  0.01
 # Multiply: Trav
 # ['Fraud', 'Trav']
 # True , True , :  0.00045
@@ -253,21 +267,21 @@ def main():
 # False , :  0.054012
 # Multiply: OC
 # ['Fraud', 'OC']
-# True , True , :  0.068
-# True , False , :  0.001898
-# False , True , :  0.072
+# True , True , :  0.0784
+# True , False , :  0.001978
+# False , True , :  0.0792
 # False , False , :  0.001998
 # Sumout:  OC
 # ['Fraud']
-# True , :  0.069898
-# False , :  0.073998
+# True , :  0.080378
+# False , :  0.081198
 # Multiply: ['Fraud']
-# True , :  5.801534e-05
-# False , :  0.003996779976
+# True , :  6.671374e-05
+# False , :  0.004385666376
 # Normalize
 # ['Fraud']
-# True , :  0.0143078344229
-# False , :  0.985692165577
+# True , :  0.0149838374671
+# False , :  0.985016162533
 
 
 main()
